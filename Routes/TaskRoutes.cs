@@ -51,5 +51,18 @@ public static class TaskRoutes
             await context.SaveChangesAsync();
             return Results.Ok(task);
         });
+
+        group.MapPut("{id}", async (Guid id, RequestTask req, TaskContext context) =>
+        {
+            var task = await context.Tasks.FirstOrDefaultAsync(t => t.Id == id);
+
+            if (task == null)
+                return Results.NotFound();
+            
+            task.Description = req.Description;
+            task.Title = req.Title;
+            await context.SaveChangesAsync();
+            return Results.Ok(task);
+        });
     }
 }
